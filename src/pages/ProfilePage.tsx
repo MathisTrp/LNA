@@ -2,8 +2,8 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Bell, LogOut, Receipt, RotateCcw, Users } from 'lucide-react'
 import { useAppState } from '../state/AppState'
-import { FARM, PURCHASE_HISTORY } from '../data/mock'
-import { Button, CardHeading, SectionTitle } from '../components/ui'
+import { FARM, PURCHASE_HISTORY } from '../data/demo'
+import { Button, CardHeading, PrototypeNotice, SectionTitle } from '../components/ui'
 
 export function ProfilePage() {
   const { user, purchases, addedPurchases, logout, resetDemo } = useAppState()
@@ -32,7 +32,7 @@ export function ProfilePage() {
       <div className="mt-4 grid gap-4 md:grid-cols-2">
         <section className="card">
           <CardHeading icon={<Bell className="size-4" />}>Ce que je reçois</CardHeading>
-          <Toggle checked={weeklyNews} onChange={setWeeklyNews} label={`Nouvelles de la ${FARM.name}`} hint="1 e-mail par semaine maximum" />
+          <Toggle checked={weeklyNews} onChange={setWeeklyNews} label={`Nouvelles de la ${FARM.name}`} hint="Nouvelles ponctuelles (proposition)" />
           <Toggle checked={events} onChange={setEvents} label="Visites et événements près de chez moi" hint="Quelques fois par an" />
         </section>
 
@@ -72,6 +72,7 @@ export function ProfilePage() {
           <LogOut className="size-4" /> Se déconnecter
         </Button>
       </section>
+      <PrototypeNotice className="mt-8" />
     </div>
   )
 }

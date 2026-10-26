@@ -2,8 +2,9 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Info } from 'lucide-react'
 import { useAppState } from '../state/AppState'
-import { FARM, REWARDS } from '../data/mock'
-import { BackButton, Button, ButtonLink, SectionTitle } from '../components/ui'
+import { REWARDS } from '../data/demo'
+import { BRAND } from '../data/lna'
+import { BackButton, Button, ButtonLink, ContentTag, SectionTitle, SourceLink } from '../components/ui'
 
 export function AdvantagePage() {
   const { rewardStatus, markRewardUsed, user } = useAppState()
@@ -66,10 +67,18 @@ export function AdvantagePage() {
             </div>
           </div>
 
-          <p className="mt-4 flex gap-2 rounded-2xl bg-mint p-4 text-[15px]">
+          <p className="mt-3 text-center text-xs text-brown-soft">Avantage proposé par notre programme · montant et code fictifs.</p>
+
+          <div className="mt-4 flex gap-2 rounded-2xl bg-mint p-4 text-[15px]">
             <Info className="mt-0.5 size-5 shrink-0 text-forest" />
-            La Nouvelle Agriculture est la marque des agriculteurs de la coopérative : en l’achetant, vous soutenez des éleveurs comme {FARM.farmerFirstName}.
-          </p>
+            <div>
+              <ContentTag kind="lna" />
+              <p className="mt-1.5">{BRAND.payQuote}</p>
+              <p className="mt-1">
+                <SourceLink href={BRAND.paySource} />
+              </p>
+            </div>
+          </div>
 
           <Button
             full

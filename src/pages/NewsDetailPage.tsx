@@ -2,8 +2,8 @@ import { useState } from 'react'
 import { Link, Navigate, useParams } from 'react-router-dom'
 import { ChevronRight, Heart, Lock, Play } from 'lucide-react'
 import { useAppState } from '../state/AppState'
-import { FARM, NEWS } from '../data/mock'
-import { BackButton, ButtonLink, ImageSlot } from '../components/ui'
+import { FARM, NEWS } from '../data/demo'
+import { BackButton, ButtonLink, ContentTag, ImageSlot } from '../components/ui'
 
 export function NewsDetailPage() {
   const { id } = useParams()
@@ -30,7 +30,10 @@ export function NewsDetailPage() {
         )}
       </div>
 
-      <p className="mt-5 text-brown-soft">
+      <div className="mt-5 flex flex-wrap items-center gap-2">
+        <ContentTag kind="demo" label="Actualité fictive · exemple de contenu" />
+      </div>
+      <p className="mt-2 text-brown-soft">
         {news.date} · {FARM.name}
       </p>
       <h1 className="mt-1 text-[1.75rem] font-bold leading-tight sm:text-[2rem]">{news.title}</h1>
@@ -47,28 +50,40 @@ export function NewsDetailPage() {
           <p className="mt-2 font-semibold">La suite et la vidéo sont réservées aux membres ayant validé 5 achats.</p>
           <p className="text-[15px] text-brown-soft">Vous en êtes à {purchases}.</p>
           <ButtonLink to="/achat" className="mt-4">
-            Ajouter un achat
+            Valider un achat
           </ButtonLink>
         </div>
       ) : (
         <>
           <div className="mt-6 flex items-center gap-3">
             <ImageSlot scene="farmer" alt="" className="size-12 shrink-0 rounded-full" />
-            <p className="font-hand text-xl text-forest">{FARM.farmerFirstName}</p>
+            <p className="font-hand text-xl text-forest">
+              {FARM.farmerFirstName} <span className="font-sans text-sm text-brown-soft">(profil fictif)</span>
+            </p>
           </div>
 
-          <div className="mt-6 flex flex-wrap items-center gap-3 rounded-[24px] bg-white p-4 ring-1 ring-brown/8">
-            <button
-              onClick={() => setThanked((t) => !t)}
-              aria-pressed={thanked}
-              className={`inline-flex min-h-11 items-center gap-2 rounded-full px-5 font-semibold transition-colors ${
-                thanked ? 'bg-forest text-white' : 'bg-mint text-deep hover:bg-lime'
-              }`}
-            >
-              <Heart className="size-5" fill={thanked ? 'currentColor' : 'none'} />
-              {thanked ? 'Merci envoyé' : `Dire merci à ${FARM.farmerFirstName}`}
-            </button>
-            <p className="text-sm text-brown-soft">{thanked ? 213 : 212} mercis · Sophie voit le total chaque semaine.</p>
+          <div className="mt-6 rounded-[24px] bg-white p-4 ring-1 ring-brown/8" aria-live="polite">
+            {thanked ? (
+              <div className="animate-fade-up">
+                <p className="flex items-center gap-2 font-semibold text-forest">
+                  <Heart className="size-5" fill="currentColor" /> Merci ! Votre message de soutien a été pris en compte.
+                </p>
+                <p className="mt-1 text-sm text-brown-soft">
+                  Les messages sont regroupés afin de ne pas solliciter individuellement les agriculteurs.
+                </p>
+              </div>
+            ) : (
+              <div className="flex flex-wrap items-center gap-3">
+                <button
+                  onClick={() => setThanked(true)}
+                  className="inline-flex min-h-11 items-center gap-2 rounded-full bg-mint px-5 font-semibold text-deep transition-colors hover:bg-lime"
+                >
+                  <Heart className="size-5" />
+                  Dire merci à {FARM.farmerFirstName}
+                </button>
+                <ContentTag kind="proposal" />
+              </div>
+            )}
           </div>
         </>
       )}

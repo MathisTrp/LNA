@@ -1,17 +1,18 @@
-import { Check, Receipt, ShoppingBasket, Sprout } from 'lucide-react'
-import { BackButton, ButtonLink, Logo, SectionTitle } from '../components/ui'
+import { Check, Receipt, ScanBarcode, Sprout } from 'lucide-react'
+import { URLS } from '../data/sources'
+import { BackButton, ButtonLink, ContentTag, Logo, PrototypeNotice, SectionTitle, SourceLink } from '../components/ui'
 
 const STEPS = [
-  { icon: ShoppingBasket, title: 'Achetez LNA', text: 'Œufs, volaille ou boucherie, dans votre magasin habituel.' },
-  { icon: Receipt, title: 'Ajoutez votre achat', text: 'Une photo de votre ticket suffit. Moins de 10 secondes.' },
-  { icon: Sprout, title: 'Rapprochez-vous de la ferme', text: 'Des avantages concrets, et un accès de plus en plus proche des agriculteurs.' },
+  { icon: Receipt, title: 'Validez votre achat', text: 'Une photo de votre ticket fait progresser votre compteur.' },
+  { icon: ScanBarcode, title: 'Retrouvez votre agriculteur', text: 'Avec la traçabilité LNA : code-barres et numéro de lot.' },
+  { icon: Sprout, title: 'Suivez sa ferme', text: 'Ajoutez-la à votre espace : nouvelles, expériences, avantages.' },
 ]
 
 const PATH = [
-  { at: 'Dès l’inscription', immediate: '—', relation: 'Vous suivez la ferme qui produit vos œufs' },
-  { at: '3 achats', immediate: '1 € de réduction', relation: 'Les nouvelles de la ferme chaque semaine' },
+  { at: 'Après la traçabilité', immediate: '—', relation: 'Vous suivez la ferme de votre produit' },
+  { at: '3 achats', immediate: '1 € de réduction', relation: 'Les nouvelles ponctuelles de la ferme' },
   { at: '5 achats', immediate: 'Offre découverte volaille', relation: 'Vidéos de la ferme + tirage au sort pour une visite' },
-  { at: '10 achats', immediate: '6 œufs offerts', relation: 'Rencontre avec un agriculteur' },
+  { at: '10 achats', immediate: 'Une boîte d’œufs offerte', relation: 'Rencontre avec un agriculteur' },
 ]
 
 export function ProgramPage() {
@@ -29,9 +30,32 @@ export function ProgramPage() {
 
       <main className="mx-auto max-w-3xl px-4 pt-8">
         <SectionTitle as="h1" kicker="Découvrez" title="le programme" />
+        <div className="mt-2">
+          <ContentTag kind="proposal" label="Programme imaginé dans notre recommandation" />
+        </div>
         <p className="mt-3 text-lg">
-          Une marque industrielle peut raconter l’agriculture. <strong>Nous, nous pouvons vous présenter ceux qui la font.</strong>
+          Une marque industrielle peut raconter l’agriculture. <strong>Une marque d’agriculteurs peut donner accès à ceux qui la font.</strong>
         </p>
+
+        <section className="mt-6 grid gap-3 sm:grid-cols-2">
+          <div className="rounded-[24px] bg-white p-5 ring-2 ring-forest/25">
+            <ContentTag kind="lna" label="Aujourd’hui · existe chez LNA" />
+            <p className="mt-3 font-bold">« Qui a produit ce que j’achète ? »</p>
+            <p className="mt-1 text-[15px] text-brown-soft">
+              Produit → code-barres + numéro de lot → agriculteur et localisation → pratiques et engagements.
+            </p>
+            <p className="mt-2">
+              <SourceLink href={URLS.tracabilite} />
+            </p>
+          </div>
+          <div className="rounded-[24px] bg-forest p-5 text-white">
+            <ContentTag kind="proposal" />
+            <p className="mt-3 font-bold">« Comment garder le lien avec cette ferme ? »</p>
+            <p className="mt-1 text-[15px] text-white/85">
+              … → ajout à mon espace → réachat → suivi de la ferme → avantages → expériences.
+            </p>
+          </div>
+        </section>
 
         <ol className="mt-8 grid gap-3 sm:grid-cols-3">
           {STEPS.map(({ icon: Icon, title, text }, i) => (
@@ -69,12 +93,12 @@ export function ProgramPage() {
         </section>
 
         <section className="mt-10">
-          <SectionTitle kicker="Nos engagements" title="pour un programme honnête" />
+          <SectionTitle kicker="Nos principes" title="pour un programme honnête" />
           <ul className="mt-4 grid gap-3">
             {[
               'Pas de points à convertir, pas de niveaux compliqués : un compteur d’achats, c’est tout.',
-              'Les nouvelles sont écrites par les agriculteurs, à leur rythme : environ une par semaine.',
-              'Le même contenu est partagé à tous les membres qui suivent une ferme : nos agriculteurs restent dans leur ferme.',
+              'Des nouvelles ponctuelles, au rythme que chaque agriculteur volontaire choisit.',
+              'Le même contenu est partagé à tous les membres qui suivent une ferme : aucune sollicitation individuelle des agriculteurs.',
               'Aucune obligation de partager quoi que ce soit sur les réseaux sociaux.',
             ].map((t) => (
               <li key={t} className="flex gap-3 text-[16px]">
@@ -93,6 +117,7 @@ export function ProgramPage() {
             Retour
           </ButtonLink>
         </div>
+        <PrototypeNotice className="mt-10" />
       </main>
     </div>
   )

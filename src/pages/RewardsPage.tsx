@@ -1,8 +1,8 @@
 import { Link } from 'react-router-dom'
 import { CalendarDays, Check, ChevronRight, Drumstick, Gift, Handshake, Lock, Sun, Tag, Tractor } from 'lucide-react'
 import { useAppState } from '../state/AppState'
-import { REWARDS, type Reward, type RewardStatus } from '../data/mock'
-import { Badge, SectionTitle } from '../components/ui'
+import { REWARDS, type Reward, type RewardStatus } from '../data/demo'
+import { Badge, ContentTag, SectionTitle } from '../components/ui'
 
 const icons = {
   coupon: Tag,
@@ -30,6 +30,9 @@ export function RewardsPage() {
   return (
     <div className="animate-fade-up">
       <SectionTitle as="h1" kicker="Mes" title="récompenses" />
+      <div className="mt-2">
+        <ContentTag kind="proposal" label="Récompenses proposées · seuils et montants fictifs" />
+      </div>
       <p className="mt-1 text-brown-soft">
         {purchases} achat{purchases > 1 ? 's' : ''} validé{purchases > 1 ? 's' : ''}. Les expériences sont le cœur du programme ; les avantages
         vous remercient au passage.
@@ -68,7 +71,8 @@ function RewardRow({ reward, highlight }: { reward: Reward; highlight?: boolean 
   const available = status === 'unlocked'
   const badge = statusBadge[status]
   const remaining = reward.threshold - purchases
-  const href = available ? (reward.kind === 'immediate' ? '/avantage' : reward.link) : undefined
+  const followPending = reward.requiresFollow && status === 'progress'
+  const href = followPending ? '/tracabilite' : available ? (reward.kind === 'immediate' ? '/avantage' : reward.link) : undefined
 
   const content = (
     <>
@@ -85,7 +89,8 @@ function RewardRow({ reward, highlight }: { reward: Reward; highlight?: boolean 
           <Badge tone={badge.tone}>{badge.label}</Badge>
         </span>
         <span className="mt-1 block text-[15px] text-brown-soft">{reward.description}</span>
-        {(status === 'progress' || status === 'locked') && (
+        {followPending && <span className="mt-1.5 block text-sm font-semibold text-olive">Retrouvez votre agriculteur pour commencer</span>}
+        {!followPending && (status === 'progress' || status === 'locked') && (
           <span className="mt-1.5 block text-sm font-semibold text-olive">
             {reward.threshold} achats · encore {remaining}
           </span>

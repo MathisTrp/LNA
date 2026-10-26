@@ -2,7 +2,7 @@ import { useState, type FormEvent } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Minus, Plus } from 'lucide-react'
 import { useAppState } from '../state/AppState'
-import { DEMO_USER } from '../data/mock'
+import { DEMO_USER } from '../data/demo'
 import { BackButton, Button, Logo, SectionTitle } from '../components/ui'
 
 const inputClass =

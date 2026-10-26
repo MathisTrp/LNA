@@ -14,6 +14,7 @@ import { RewardsPage } from './pages/RewardsPage'
 import { VisitPage } from './pages/VisitPage'
 import { FeedbackPage } from './pages/FeedbackPage'
 import { ProfilePage } from './pages/ProfilePage'
+import { TracePage } from './pages/TracePage'
 
 export default function App() {
   const { pathname } = useLocation()
@@ -33,6 +34,7 @@ export default function App() {
         <Route element={<AppLayout />}>
           <Route path="/accueil" element={<DashboardPage />} />
           <Route path="/achat" element={<AddPurchasePage />} />
+          <Route path="/tracabilite" element={<TracePage />} />
           <Route path="/avantage" element={<AdvantagePage />} />
           <Route path="/ferme" element={<FarmPage />} />
           <Route path="/ferme/actualites/:id" element={<NewsDetailPage />} />

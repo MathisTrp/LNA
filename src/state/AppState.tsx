@@ -1,7 +1,7 @@
 import { createContext, useContext, useEffect, useReducer, type ReactNode } from 'react'
-import { DEMO_USER, INITIAL_PURCHASES, SCANNED_PRODUCT, MILESTONES, REWARDS, type Reward, type RewardStatus, type User } from '../data/mock'
+import { DEMO_USER, INITIAL_PURCHASES, SCANNED_PRODUCT, MILESTONES, REWARDS, type Reward, type RewardStatus, type User } from '../data/demo'
 
-const STORAGE_KEY = 'lna-fidelite-v1'
+const STORAGE_KEY = 'lna-fidelite-v2'
 const UNLOCK_THRESHOLD = MILESTONES[0].purchases
 
 export type VisitStatus = 'none' | 'entered' | 'done'
@@ -18,6 +18,8 @@ type State = {
   visitStatus: VisitStatus
   feedbacks: Feedback[]
   showUnlock: boolean
+  /** Ferme ajoutée à l'espace depuis la traçabilité (proposition du programme) */
+  followedFarm: boolean
 }
 
 const initialState: State = {
@@ -29,6 +31,7 @@ const initialState: State = {
   visitStatus: 'none',
   feedbacks: [],
   showUnlock: false,
+  followedFarm: false,
 }
 
 type Action =
@@ -39,6 +42,7 @@ type Action =
   | { type: 'setVisit'; status: VisitStatus }
   | { type: 'feedback'; feedback: Feedback }
   | { type: 'dismissUnlock' }
+  | { type: 'setFollowedFarm'; value: boolean }
   | { type: 'resetDemo' }
 
 function reducer(state: State, action: Action): State {
@@ -72,6 +76,8 @@ function reducer(state: State, action: Action): State {
       return { ...state, feedbacks: [...state.feedbacks, action.feedback] }
     case 'dismissUnlock':
       return { ...state, showUnlock: false }
+    case 'setFollowedFarm':
+      return { ...state, followedFarm: action.value }
     case 'resetDemo':
       return { ...initialState, loggedIn: true, user: state.user }
   }
@@ -96,6 +102,7 @@ type AppStateValue = State & {
   setVisit: (status: VisitStatus) => void
   submitFeedback: (feedback: Feedback) => void
   dismissUnlock: () => void
+  setFollowedFarm: (value: boolean) => void
   resetDemo: () => void
   rewardStatus: (reward: Reward) => RewardStatus
   nextMilestone: (typeof MILESTONES)[number] | undefined
@@ -117,8 +124,9 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
 
   const rewardStatus = (reward: Reward): RewardStatus => {
     if (state.usedRewards.includes(reward.id)) return 'used'
+    if (reward.requiresFollow) return state.followedFarm ? 'unlocked' : 'progress'
     if (state.purchases >= reward.threshold) return 'unlocked'
-    const nextOfKind = REWARDS.filter((r) => r.kind === reward.kind && r.threshold > state.purchases).sort(
+    const nextOfKind = REWARDS.filter((r) => r.kind === reward.kind && !r.requiresFollow && r.threshold > state.purchases).sort(
       (a, b) => a.threshold - b.threshold,
     )[0]
     return nextOfKind?.id === reward.id ? 'progress' : 'locked'
@@ -139,6 +147,7 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
     setVisit: (status) => dispatch({ type: 'setVisit', status }),
     submitFeedback: (feedback) => dispatch({ type: 'feedback', feedback }),
     dismissUnlock: () => dispatch({ type: 'dismissUnlock' }),
+    setFollowedFarm: (value) => dispatch({ type: 'setFollowedFarm', value }),
     resetDemo: () => dispatch({ type: 'resetDemo' }),
     rewardStatus,
     nextMilestone: MILESTONES.find((m) => m.purchases > state.purchases),

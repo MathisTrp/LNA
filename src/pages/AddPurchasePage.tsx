@@ -1,16 +1,19 @@
 import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Camera, Check, ChevronRight, QrCode, Receipt, Upload } from 'lucide-react'
+import { Check, ChevronRight, Receipt, ScanBarcode, Upload } from 'lucide-react'
 import { useAppState } from '../state/AppState'
-import { FARM, SCANNED_PRODUCT } from '../data/mock'
-import { BackButton, Button, SectionTitle } from '../components/ui'
+import { SCANNED_PRODUCT } from '../data/demo'
+import { BackButton, Button, ContentTag, SectionTitle } from '../components/ui'
 
-type Step = 'choose' | 'ticket' | 'qr' | 'processing' | 'success'
+type Step = 'choose' | 'ticket' | 'processing' | 'success'
 
+/**
+ * Fonction A — Valider mon achat : mécanique PROPOSÉE par notre programme (simulation),
+ * distincte de la traçabilité LNA (fonction B, page /tracabilite).
+ */
 export function AddPurchasePage() {
   const [step, setStep] = useState<Step>('choose')
-  const [method, setMethod] = useState<'ticket' | 'qr'>('ticket')
-  const { addPurchase, purchases } = useAppState()
+  const { addPurchase, purchases, followedFarm } = useAppState()
   const navigate = useNavigate()
 
   // Simulation de l'analyse : ~1,6 s puis validation de l'achat
@@ -26,39 +29,39 @@ export function AddPurchasePage() {
   return (
     <div className="mx-auto max-w-lg animate-fade-up">
       {step !== 'success' && step !== 'processing' && (
-        <BackButton label={step === 'choose' ? 'Retour' : 'Changer de méthode'} {...(step === 'choose' ? { to: '/accueil' } : {})} />
+        <BackButton label="Retour" {...(step === 'choose' ? { to: '/accueil' } : {})} />
       )}
 
       {step === 'choose' && (
         <>
-          <SectionTitle as="h1" kicker="Ajouter" title="un achat" className="mt-2" />
-          <p className="mt-2 text-brown-soft">Choisissez la méthode la plus simple pour vous.</p>
+          <div className="mt-2">
+            <ContentTag kind="proposal" label="Programme de fidélité · notre proposition" />
+          </div>
+          <SectionTitle as="h1" kicker="Valider" title="mon achat" className="mt-3" />
+          <p className="mt-2 text-brown-soft">Chaque achat LNA validé vous fait progresser vers vos avantages et vos expériences.</p>
           <div className="mt-6 grid gap-3">
             <MethodButton
               icon={<Receipt className="size-6" />}
               title="Scanner mon ticket"
-              text="Une photo du ticket de caisse, tous les produits LNA sont reconnus."
-              recommended
-              onClick={() => {
-                setMethod('ticket')
-                setStep('ticket')
-              }}
+              text="Une photo du ticket de caisse suffit à valider vos produits LNA."
+              onClick={() => setStep('ticket')}
             />
-            <MethodButton
-              icon={<QrCode className="size-6" />}
-              title="Scanner le QR code du produit"
-              text="Le QR code imprimé sur la boîte ou l’étiquette."
-              onClick={() => {
-                setMethod('qr')
-                setStep('qr')
-              }}
-            />
+          </div>
+
+          <div className="mt-8 rounded-[24px] border-2 border-dashed border-forest/30 p-5">
+            <ContentTag kind="lna" label="Traçabilité LNA · service existant" />
+            <p className="mt-3 text-lg font-bold">Envie de savoir qui a produit vos œufs ?</p>
+            <p className="mt-1 text-[15px] text-brown-soft">
+              Avec le code-barres et le numéro de lot, la traçabilité LNA vous fait découvrir l’agriculteur, sa localisation et ses engagements.
+            </p>
+            <Button variant="outline" full className="mt-4" onClick={() => navigate('/tracabilite')}>
+              <ScanBarcode className="size-5" /> Retrouver mon agriculteur
+            </Button>
           </div>
         </>
       )}
 
       {step === 'ticket' && <TicketStep onValidate={() => setStep('processing')} />}
-      {step === 'qr' && <QrStep onValidate={() => setStep('processing')} />}
 
       {step === 'processing' && (
         <div className="mt-10 text-center" aria-live="polite">
@@ -66,7 +69,7 @@ export function AddPurchasePage() {
             <TicketMock />
             <div className="absolute inset-x-2 h-1 rounded-full bg-forest shadow-[0_0_16px_4px_rgba(48,102,24,0.45)] animate-scan" />
           </div>
-          <p className="mt-6 text-lg font-semibold">{method === 'ticket' ? 'Lecture du ticket…' : 'Lecture du QR code…'}</p>
+          <p className="mt-6 text-lg font-semibold">Lecture du ticket…</p>
           <p className="text-brown-soft">Nous recherchons vos produits LNA.</p>
         </div>
       )}
@@ -82,22 +85,40 @@ export function AddPurchasePage() {
           </p>
 
           <div className="card mt-6 text-left">
-            <p className="kicker text-brown-soft">Produit reconnu</p>
+            <p className="kicker text-brown-soft">Produit reconnu sur le ticket</p>
             <p className="mt-1 text-lg font-bold">{SCANNED_PRODUCT.product}</p>
             <p className="text-[15px] text-brown-soft">{SCANNED_PRODUCT.store} · aujourd’hui</p>
-            <hr className="my-4 border-brown/10" />
-            <p className="font-hand text-xl leading-snug text-forest">
-              Ces œufs viennent de la {FARM.name}, chez {FARM.farmerFirstName}.
-            </p>
+            {!followedFarm && (
+              <>
+                <hr className="my-4 border-brown/10" />
+                <p className="text-[16px]">
+                  <strong>Et maintenant, qui a produit ces œufs ?</strong> Le ticket valide votre achat ; le numéro de lot imprimé sur l’œuf
+                  permet de retrouver la ferme grâce à la traçabilité LNA.
+                </p>
+              </>
+            )}
           </div>
 
           <div className="mt-6 grid gap-3">
-            <Button full onClick={() => navigate('/accueil')}>
-              Retour à mon espace
-            </Button>
-            <Button full variant="ghost" onClick={() => setStep('choose')}>
-              Ajouter un autre achat
-            </Button>
+            {!followedFarm ? (
+              <>
+                <Button full onClick={() => navigate('/tracabilite')}>
+                  <ScanBarcode className="size-5" /> Retrouver mon agriculteur
+                </Button>
+                <Button full variant="ghost" onClick={() => navigate('/accueil')}>
+                  Retour à mon espace
+                </Button>
+              </>
+            ) : (
+              <>
+                <Button full onClick={() => navigate('/accueil')}>
+                  Retour à mon espace
+                </Button>
+                <Button full variant="ghost" onClick={() => setStep('choose')}>
+                  Valider un autre achat
+                </Button>
+              </>
+            )}
           </div>
         </div>
       )}
@@ -109,13 +130,11 @@ function MethodButton({
   icon,
   title,
   text,
-  recommended,
   onClick,
 }: {
   icon: React.ReactNode
   title: string
   text: string
-  recommended?: boolean
   onClick: () => void
 }) {
   return (
@@ -124,7 +143,6 @@ function MethodButton({
       <span className="min-w-0 flex-1">
         <span className="flex flex-wrap items-center gap-2 text-lg font-bold">
           {title}
-          {recommended && <span className="rounded-full bg-lime px-2 py-0.5 text-[11px] font-bold uppercase tracking-wide text-deep">Conseillé</span>}
         </span>
         <span className="mt-0.5 block text-[15px] text-brown-soft">{text}</span>
       </span>
@@ -140,7 +158,7 @@ function TicketStep({ onValidate }: { onValidate: () => void }) {
 
   return (
     <>
-      <SectionTitle as="h1" kicker="Scanner" title="mon ticket" className="mt-2" />
+      <SectionTitle as="h1" kicker="Valider mon achat" title="mon ticket" className="mt-2" />
       <div
         role="button"
         tabIndex={0}
@@ -189,32 +207,9 @@ function TicketStep({ onValidate }: { onValidate: () => void }) {
           onChange={(e) => setFileName(e.target.files?.[0]?.name ?? null)}
         />
       </div>
-      <p className="mt-3 text-center text-sm text-brown-soft">Prototype : aucune photo n’est envoyée ni analysée.</p>
+      <p className="mt-3 text-center text-sm text-brown-soft">Simulation : aucune photo n’est envoyée ni analysée. La validation par ticket est une proposition du programme.</p>
       <Button full className="mt-5" onClick={onValidate}>
         Simuler la validation
-      </Button>
-    </>
-  )
-}
-
-function QrStep({ onValidate }: { onValidate: () => void }) {
-  return (
-    <>
-      <SectionTitle as="h1" kicker="Scanner" title="le QR code" className="mt-2" />
-      <div className="relative mt-5 grid aspect-square place-items-center overflow-hidden rounded-[28px] bg-brown">
-        <div className="relative size-3/5">
-          {['left-0 top-0 border-l-4 border-t-4', 'right-0 top-0 border-r-4 border-t-4', 'left-0 bottom-0 border-l-4 border-b-4', 'right-0 bottom-0 border-r-4 border-b-4'].map((c) => (
-            <span key={c} className={`absolute size-10 rounded-sm border-lime ${c}`} />
-          ))}
-          <QrCode className="absolute inset-0 m-auto size-1/2 text-white/25" />
-          <div className="absolute inset-x-2 h-0.5 bg-lime shadow-[0_0_12px_3px_rgba(175,216,126,0.6)] animate-scan" />
-        </div>
-        <p className="absolute bottom-4 flex items-center gap-2 text-sm text-white/80">
-          <Camera className="size-4" /> Visez le QR code sur la boîte
-        </p>
-      </div>
-      <Button full className="mt-5" onClick={onValidate}>
-        Simuler le scan
       </Button>
     </>
   )

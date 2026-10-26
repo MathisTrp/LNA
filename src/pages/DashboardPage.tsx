@@ -1,26 +1,29 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { CalendarDays, ChevronRight, Lock, MapPin, Newspaper, Plus, Tag, Tractor, Users } from 'lucide-react'
+import { BadgeCheck, CalendarDays, ChevronRight, Lock, MapPin, Newspaper, Plus, ScanBarcode, Tag, Tractor, Users } from 'lucide-react'
 import { useAppState } from '../state/AppState'
-import { CATEGORIES, FARM, NEWS, REWARDS, VISIT, type Category } from '../data/mock'
-import { Badge, Button, ButtonLink, CardHeading, ImageSlot, Modal, ProgressBar } from '../components/ui'
+import { FARM, NEWS, REWARDS, VISIT } from '../data/demo'
+import { CATEGORIES, EGGS_PLEIN_AIR } from '../data/lna'
+import { Badge, Button, ButtonLink, CardHeading, ContentTag, ImageSlot, Modal, ProgressBar, SourceLink } from '../components/ui'
+
+type Category = (typeof CATEGORIES)[number]
 
 export function DashboardPage() {
   const { user } = useAppState()
   return (
     <div className="animate-fade-up">
       <h1 className="script-title text-[2.3rem] text-forest sm:text-[2.6rem]">Bonjour {user.firstName}</h1>
-      <p className="text-brown-soft">Voici où vous en êtes, et les nouvelles de votre ferme.</p>
+      <p className="text-brown-soft">Voici où vous en êtes, et le lien avec la ferme de vos produits.</p>
 
       <div className="mt-5 grid gap-4 md:grid-cols-2 md:gap-6">
         <div className="grid content-start gap-4 md:gap-6">
           <ProgressCard />
-          <AdvantageCard />
-          <ExperienceCard />
+          <FarmCard />
         </div>
         <div className="grid content-start gap-4 md:gap-6">
-          <FarmCard />
+          <ExperienceCard />
           <LatestNewsCard />
+          <AdvantageCard />
         </div>
       </div>
 
@@ -68,7 +71,7 @@ function ProgressCard() {
 
       <ButtonLink to="/achat" full className="mt-4">
         <Plus className="size-5" />
-        Ajouter un achat
+        Valider un achat
       </ButtonLink>
     </section>
   )
@@ -111,28 +114,42 @@ function AdvantageCard() {
 }
 
 function FarmCard() {
+  const { followedFarm } = useAppState()
+
+  if (!followedFarm) {
+    return (
+      <section className="card border-2 border-dashed border-forest/30 ring-0" aria-labelledby="farm-title">
+        <CardHeading icon={<Tractor className="size-4" />}>Ma ferme</CardHeading>
+        <h2 id="farm-title" className="mt-2 text-[1.35rem] font-bold leading-tight">Qui a produit vos œufs ?</h2>
+        <p className="mt-2 text-[16px]">
+          La traçabilité LNA vous permet de retrouver votre agriculteur. <strong>Votre espace LNA vous permet de garder le lien.</strong>
+        </p>
+        <ButtonLink to="/tracabilite" variant="dark" full className="mt-4">
+          <ScanBarcode className="size-5" /> Retrouver mon agriculteur
+        </ButtonLink>
+      </section>
+    )
+  }
+
   return (
     <section className="card overflow-hidden p-0 sm:p-0" aria-labelledby="farm-title">
-      <ImageSlot scene="farmer" alt={`${FARM.farmer} dans sa ferme`} className="aspect-[16/8]" />
+      <ImageSlot scene="farmer" alt={`Illustration : ${FARM.farmer} dans sa ferme`} className="aspect-[16/8]" />
       <div className="p-5 sm:p-6">
-        <CardHeading icon={<Tractor className="size-4" />}>Ma ferme</CardHeading>
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <CardHeading icon={<Tractor className="size-4" />}>Ma ferme</CardHeading>
+          <ContentTag kind="demo" label="Profil fictif" />
+        </div>
         <h2 id="farm-title" className="mt-2 text-[1.4rem] font-bold leading-tight">{FARM.name}</h2>
-        <dl className="mt-2 grid gap-1 text-[15px]">
-          <div className="flex gap-2">
-            <dt className="text-brown-soft">Agricultrice :</dt>
-            <dd className="font-semibold">{FARM.farmer}</dd>
-          </div>
-          <div className="flex gap-2">
-            <dt className="text-brown-soft">Production :</dt>
-            <dd className="font-semibold">{FARM.production}</dd>
-          </div>
-          <div className="flex items-center gap-1.5">
-            <dt className="sr-only">Localisation</dt>
-            <MapPin className="size-4 text-olive" />
-            <dd>{FARM.location}</dd>
-          </div>
-        </dl>
-        <p className="mt-3 text-[16px]">{FARM.shortIntro}</p>
+        <p className="mt-1 text-[15px]">
+          <strong>{FARM.farmer}</strong> · {EGGS_PLEIN_AIR.production}
+        </p>
+        <p className="flex items-center gap-1.5 text-[15px] text-brown-soft">
+          <MapPin className="size-4 text-olive" /> {FARM.location}
+        </p>
+        <p className="mt-3 flex items-start gap-2 text-[15px]">
+          <BadgeCheck className="mt-0.5 size-4 shrink-0 text-forest" />
+          Retrouvée grâce à la traçabilité LNA, ajoutée à votre espace pour garder le lien.
+        </p>
         <ButtonLink to="/ferme" variant="dark" full className="mt-4">
           Voir les nouvelles de ma ferme
         </ButtonLink>
@@ -142,12 +159,14 @@ function FarmCard() {
 }
 
 function LatestNewsCard() {
+  const { followedFarm } = useAppState()
   const news = NEWS[0]
+  if (!followedFarm) return null
   return (
     <section className="card" aria-labelledby="news-title">
       <div className="flex items-center justify-between">
         <CardHeading icon={<Newspaper className="size-4" />}>Dernière actualité</CardHeading>
-        <Badge tone="lime">Nouveau</Badge>
+        <ContentTag kind="demo" label="Fictive" />
       </div>
       <div className="mt-3 flex gap-4">
         <ImageSlot scene={news.scene} src={news.image} alt="" className="size-24 shrink-0 rounded-2xl sm:size-28" />
@@ -217,16 +236,13 @@ function ExperienceCard() {
 function DiscoverCategories() {
   const [selected, setSelected] = useState<Category | null>(null)
   const navigate = useNavigate()
-  const { rewardStatus } = useAppState()
-  const poultryOffer = REWARDS.find((r) => r.id === 'decouverte-volaille')!
-  const offerUnlocked = rewardStatus(poultryOffer) === 'unlocked'
 
   return (
     <section className="mt-10" aria-labelledby="discover-title">
       <p className="kicker">Découvrez aussi</p>
       <h2 id="discover-title" className="script-title text-[1.9rem] text-forest">La Nouvelle Agriculture</h2>
       <p className="mt-1 text-[16px] text-brown-soft">
-        Vous connaissez déjà nos œufs. Découvrez maintenant les éleveurs derrière notre volaille et notre boucherie.
+        Vous connaissez déjà nos œufs. Découvrez maintenant les éleveurs derrière notre volaille et notre viande.
       </p>
       <div className="mt-4 grid grid-cols-3 gap-3">
         {CATEGORIES.map((cat) => {
@@ -235,13 +251,13 @@ function DiscoverCategories() {
             <button
               key={cat.id}
               onClick={() => (known ? navigate('/ferme') : setSelected(cat))}
-              className={`group overflow-hidden rounded-3xl bg-white text-left ring-1 ring-brown/8 transition hover:-translate-y-0.5 hover:ring-forest/40`}
-              aria-label={known ? `${cat.label} : voir ma ferme` : `Découvrir les éleveurs : ${cat.label}`}
+              className="group overflow-hidden rounded-3xl bg-white text-left ring-1 ring-brown/8 transition hover:-translate-y-0.5 hover:ring-forest/40"
+              aria-label={known ? `${cat.label} : voir ma ferme` : `Découvrir la filière : ${cat.label}`}
             >
               <ImageSlot scene={cat.scene} alt="" className="aspect-[4/3] md:aspect-[16/7]" />
               <div className="p-3">
                 <p className="font-bold">{cat.label}</p>
-                <p className="text-xs text-brown-soft sm:text-sm">{known ? 'Votre ferme' : 'Rencontrer l’éleveur'}</p>
+                <p className="text-xs text-brown-soft sm:text-sm">{known ? 'Votre ferme' : 'Découvrir la filière'}</p>
               </div>
             </button>
           )
@@ -252,18 +268,40 @@ function DiscoverCategories() {
         {selected && (
           <>
             <ImageSlot scene={selected.scene} alt="" className="-mx-6 -mt-6 mb-5 aspect-[16/9] rounded-t-[32px]" />
-            <p className="kicker text-olive">{selected.label}</p>
-            <h2 id="cat-title" className="mt-1 text-2xl font-bold">{selected.farmer}</h2>
-            <p className="text-brown-soft">{selected.farm}</p>
-            <p className="mt-3">{selected.text}</p>
-            {selected.id === 'volaille' && (
-              <div className="mt-4 rounded-2xl bg-mint p-4 text-[15px]">
-                <strong>Offre découverte : −20 % sur un produit de volaille LNA.</strong>{' '}
-                {offerUnlocked ? 'Disponible dans vos avantages.' : 'Débloquée à 5 achats.'}
-              </div>
+            <ContentTag kind="lna" />
+            <h2 id="cat-title" className="mt-2 text-2xl font-bold">
+              {selected.label} La Nouvelle Agriculture®
+            </h2>
+            <ul className="mt-3 grid gap-2">
+              {selected.facts.map((f) => (
+                <li key={f.text} className="flex gap-2 text-[16px]">
+                  <BadgeCheck className="mt-0.5 size-5 shrink-0 text-forest" />
+                  <span>
+                    {f.text} <span className="text-sm text-brown-soft">({f.scope})</span>
+                  </span>
+                </li>
+              ))}
+            </ul>
+            {selected.farmer && (
+              <p className="mt-4 rounded-2xl bg-white p-4 text-[15px] ring-1 ring-brown/10">
+                Parmi les agriculteurs présentés sur le site LNA : <strong>{selected.farmer.name}</strong>, {selected.farmer.caption}.
+              </p>
             )}
-            <Link to="/recompenses" onClick={() => setSelected(null)} className="mt-5 inline-flex min-h-11 items-center gap-1 font-semibold text-forest underline underline-offset-4">
-              Voir mes récompenses <ChevronRight className="size-4" />
+            <p className="mt-3">
+              <SourceLink href={selected.facts[0]?.source ?? selected.farmer!.source} />
+            </p>
+            <div className="mt-5 rounded-2xl bg-mint p-4">
+              <ContentTag kind="proposal" />
+              <p className="mt-2 text-[15px]">
+                Achetez un produit {selected.label.toLowerCase()} LNA, retrouvez son éleveur grâce à la traçabilité et suivez aussi sa ferme.
+              </p>
+            </div>
+            <Link
+              to="/recompenses"
+              onClick={() => setSelected(null)}
+              className="mt-4 inline-flex min-h-11 items-center gap-1 font-semibold text-forest underline underline-offset-4"
+            >
+              Voir les récompenses proposées <ChevronRight className="size-4" />
             </Link>
           </>
         )}

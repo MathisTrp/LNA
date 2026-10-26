@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { Check, Heart } from 'lucide-react'
 import { useAppState } from '../state/AppState'
-import { FARM, FEEDBACK_CHOICES } from '../data/mock'
+import { FARM, FEEDBACK_CHOICES } from '../data/demo'
 import { Button, SectionTitle } from '../components/ui'
 
 const RATING_LABELS = ['Décevante', 'Moyenne', 'Bien', 'Très bien', 'Excellente']
@@ -26,7 +26,7 @@ export function FeedbackPage() {
         </div>
         <h1 className="script-title mt-5 text-[2.3rem] text-forest">Merci {user.firstName} !</h1>
         <p className="mt-2 text-lg">
-          Vos retours sont lus par l’équipe LNA et partagés avec {FARM.farmerFirstName}. Ils nous aident à faire évoluer le programme.
+          Dans notre proposition, les retours sont lus par l’équipe du programme et partagés de façon groupée avec les agriculteurs. Ils aident à faire évoluer le programme.
         </p>
         <Button full className="mt-8" onClick={() => navigate('/accueil')}>
           Retour à mon espace

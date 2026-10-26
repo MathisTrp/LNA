@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { CalendarDays, FlaskConical, LogOut, Plus, RotateCcw, Sparkles, Star, Tractor, X } from 'lucide-react'
+import { CalendarDays, FlaskConical, LogOut, Plus, RotateCcw, ScanBarcode, Sparkles, Star, Tractor, X } from 'lucide-react'
 import { useAppState } from '../state/AppState'
 
 /**
@@ -23,9 +23,10 @@ export function DemoPanel() {
 
   const actions = [
     { icon: RotateCcw, label: 'Remettre le compte à 3 achats', onClick: () => run(app.resetDemo, '/accueil') },
-    { icon: Plus, label: 'Simuler un nouvel achat', onClick: () => run(app.addPurchase, '/accueil') },
+    { icon: Plus, label: 'Valider un achat', hint: 'ticket simulé, +1 achat', onClick: () => run(app.addPurchase, '/accueil') },
+    { icon: ScanBarcode, label: 'Simuler la traçabilité', hint: 'produit → agriculteur → suivre la ferme', onClick: () => run(() => {}, '/tracabilite') },
     { icon: Sparkles, label: 'Passer directement à 5 achats', hint: 'débloque la récompense', onClick: () => run(() => app.setPurchases(Math.max(5, app.purchases)), '/accueil') },
-    { icon: Tractor, label: 'Afficher la ferme', onClick: () => run(() => {}, '/ferme') },
+    { icon: Tractor, label: 'Afficher la ferme', hint: 'la suit automatiquement si besoin', onClick: () => run(() => app.setFollowedFarm(true), '/ferme') },
     { icon: CalendarDays, label: 'Afficher la visite de ferme', onClick: () => run(() => {}, '/experiences/visite') },
     {
       icon: Star,
@@ -38,7 +39,7 @@ export function DemoPanel() {
           app.setVisit('done')
         }, '/avis/visite'),
     },
-    { icon: LogOut, label: 'Revenir à l’écran QR code', hint: 'déconnexion', onClick: () => { app.logout(); navigate('/'); setOpen(false) } },
+    { icon: LogOut, label: 'Revenir à la landing page', hint: 'déconnexion', onClick: () => { app.logout(); navigate('/'); setOpen(false) } },
   ]
 
   return (

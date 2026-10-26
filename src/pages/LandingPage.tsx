@@ -1,8 +1,8 @@
 import { useNavigate } from 'react-router-dom'
-import { QrCode, Tag, Tractor } from 'lucide-react'
+import { ArrowRight, QrCode, ScanBarcode, ShoppingBasket, Sprout, Tag, Tractor } from 'lucide-react'
 import { useAppState } from '../state/AppState'
-import { DEMO_USER, FARM } from '../data/mock'
-import { ButtonLink, ImageSlot, Logo, PatternBand } from '../components/ui'
+import { DEMO_USER, FARM } from '../data/demo'
+import { ButtonLink, ContentTag, ImageSlot, Logo, PatternBand, PrototypeNotice } from '../components/ui'
 
 export function LandingPage() {
   const { login, loggedIn } = useAppState()
@@ -28,9 +28,9 @@ export function LandingPage() {
         <div className="animate-fade-up">
           <p className="inline-flex items-center gap-2 rounded-full bg-white px-3 py-1.5 text-sm font-medium text-brown-soft ring-1 ring-brown/10">
             <QrCode className="size-4 text-forest" />
-            Vous venez de scanner votre boîte d’œufs
+            Vous avez scanné le QR code du programme
           </p>
-          <p className="kicker mt-6 text-brown">Le programme des membres LNA</p>
+          <p className="kicker mt-6 text-brown">Proposition de programme de fidélité</p>
           <h1 className="script-title mt-1 text-[2.8rem] text-forest sm:text-[3.4rem]">Entrez dans nos fermes</h1>
           <p className="mt-4 text-[1.35rem] font-medium leading-snug sm:text-2xl">
             Vos achats LNA vous rapprochent de ceux qui les produisent.
@@ -41,7 +41,7 @@ export function LandingPage() {
         <div className="relative">
           <ImageSlot scene="farmer" alt={`${FARM.farmer}, agricultrice`} className="aspect-[4/3] rounded-[32px] md:aspect-[5/4]" />
           <p className="absolute bottom-3 left-3 right-3 rounded-2xl bg-white/90 px-4 py-2 text-sm font-semibold backdrop-blur sm:left-auto sm:right-4">
-            {FARM.farmer}, {FARM.production.toLowerCase()} · {FARM.location}
+            Illustration · {FARM.farmer}, éleveuse fictive
           </p>
         </div>
       </section>
@@ -55,10 +55,12 @@ export function LandingPage() {
         <Benefit
           icon={<Tractor className="size-6" />}
           title="Un accès privilégié aux fermes"
-          text="Suivez la ferme qui produit vos œufs, ses nouvelles, et participez à des visites avec nos agriculteurs."
+          text="Retrouvez la ferme de vos produits grâce à la traçabilité LNA, puis suivez-la : ses nouvelles, des visites, des rencontres."
           highlight
         />
       </section>
+
+      <TraceToLink />
 
       <section className="mx-auto mt-8 flex max-w-6xl flex-col gap-3 px-4 sm:flex-row sm:justify-center md:px-6">
         <ButtonLink to="/programme" className="sm:min-w-64">
@@ -82,9 +84,7 @@ export function LandingPage() {
       </p>
 
       <PatternBand className="mt-12" />
-      <p className="mx-auto max-w-xl px-6 pt-4 text-center text-xs text-brown-soft">
-        Prototype étudiant non officiel · données et personnes fictives · conçu à partir de l’univers de La Nouvelle Agriculture®.
-      </p>
+      <PrototypeNotice className="mx-auto max-w-xl px-6 pt-4" />
     </div>
   )
 }
@@ -98,5 +98,40 @@ function Benefit({ icon, title, text, highlight }: { icon: React.ReactNode; titl
         <p className={`mt-1 text-[15px] ${highlight ? 'text-white/85' : 'text-brown-soft'}`}>{text}</p>
       </div>
     </div>
+  )
+}
+
+/** Le cœur de la recommandation : la traçabilité existante devient le point d'entrée d'une relation suivie */
+function TraceToLink() {
+  const steps = [
+    { icon: ShoppingBasket, label: 'Un produit LNA', kind: 'lna' as const },
+    { icon: ScanBarcode, label: 'La traçabilité : votre agriculteur', kind: 'lna' as const },
+    { icon: Sprout, label: 'Votre espace : suivre sa ferme', kind: 'proposal' as const },
+    { icon: Tractor, label: 'Avantages et expériences', kind: 'proposal' as const },
+  ]
+  return (
+    <section className="mx-auto mt-8 max-w-6xl px-4 md:px-6">
+      <div className="rounded-[28px] bg-white p-5 ring-1 ring-brown/8 sm:p-7">
+        <p className="text-center text-lg font-semibold sm:text-xl">
+          La traçabilité LNA vous permet de retrouver votre agriculteur.
+          <br className="hidden sm:block" /> <span className="text-forest">Votre espace LNA vous permet de garder le lien.</span>
+        </p>
+        <ol className="mt-5 grid gap-2 sm:grid-cols-4 sm:gap-3">
+          {steps.map(({ icon: Icon, label, kind }, i) => (
+            <li key={label} className="relative flex items-center gap-3 rounded-2xl bg-cream p-3 sm:flex-col sm:text-center">
+              <span className={`grid size-10 shrink-0 place-items-center rounded-full ${kind === 'lna' ? 'bg-forest text-white' : 'bg-lime text-deep'}`}>
+                <Icon className="size-5" />
+              </span>
+              <span className="text-[15px] font-semibold leading-tight">{label}</span>
+              {i < steps.length - 1 && <ArrowRight className="absolute -right-3 top-1/2 hidden size-5 -translate-y-1/2 text-olive sm:block" />}
+            </li>
+          ))}
+        </ol>
+        <div className="mt-4 flex flex-wrap justify-center gap-2">
+          <ContentTag kind="lna" label="Existe déjà chez LNA" />
+          <ContentTag kind="proposal" label="Ce que nous proposons" />
+        </div>
+      </div>
+    </section>
   )
 }

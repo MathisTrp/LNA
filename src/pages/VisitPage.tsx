@@ -1,7 +1,7 @@
 import { CalendarDays, Check, Clock, Lock, MapPin, Users } from 'lucide-react'
 import { useAppState } from '../state/AppState'
-import { FARM, VISIT } from '../data/mock'
-import { BackButton, Badge, Button, ButtonLink, ImageSlot, SectionTitle } from '../components/ui'
+import { FARM, VISIT } from '../data/demo'
+import { BackButton, Badge, Button, ButtonLink, ContentTag, ImageSlot, SectionTitle } from '../components/ui'
 
 export function VisitPage() {
   const { isUnlocked, purchases, visitStatus, setVisit } = useAppState()
@@ -10,7 +10,10 @@ export function VisitPage() {
   return (
     <div className="mx-auto max-w-3xl animate-fade-up">
       <BackButton />
-      <p className="kicker mt-2">Expériences</p>
+      <div className="mt-2 flex flex-wrap items-center gap-2">
+        <p className="kicker">Expériences</p>
+        <ContentTag kind="proposal" label="Expérience proposée · date fictive" />
+      </div>
 
       <div className="mt-2 overflow-hidden rounded-[32px] bg-white ring-1 ring-brown/8">
         <ImageSlot scene="barn" alt={`La ${FARM.name}`} className="aspect-[16/8]" />
@@ -49,8 +52,8 @@ export function VisitPage() {
           </ol>
 
           <p className="mt-5 text-[15px] text-brown-soft">
-            Gratuit. Tirage au sort parmi les membres inscrits, résultat le {VISIT.drawDate}. Bottes conseillées : nous restons dans le respect des
-            règles sanitaires de l’élevage (surchaussures fournies, pas d’accès à l’intérieur des bâtiments).
+            Gratuit. Tirage au sort parmi les membres inscrits, résultat le {VISIT.drawDate}. Les conditions de visite seraient définies avec
+            l’éleveur volontaire, dans le respect des règles sanitaires de l’élevage.
           </p>
 
           <div className="mt-6">
@@ -64,7 +67,7 @@ export function VisitPage() {
                     <Lock className="size-4" /> Bientôt disponible
                   </Button>
                   <ButtonLink to="/achat" variant="outline" className="sm:flex-1">
-                    Ajouter un achat
+                    Valider un achat
                   </ButtonLink>
                 </div>
               </>
