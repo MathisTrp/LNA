@@ -90,6 +90,7 @@ export function ProgramPage() {
               </div>
             ))}
           </div>
+          <p className="mt-4 text-xs text-white/70">Paliers (3, 5, 10 achats) et avantages : hypothèses de démonstration, à calibrer avec LNA.</p>
         </section>
 
         <section className="mt-10">

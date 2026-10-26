@@ -73,6 +73,7 @@ function ProgressCard() {
         <Plus className="size-5" />
         Valider un achat
       </ButtonLink>
+      <p className="mt-3 text-center text-xs text-white/70">Paliers de 5 et 10 achats : hypothèses de démonstration.</p>
     </section>
   )
 }
@@ -95,6 +96,7 @@ function AdvantageCard() {
           <ButtonLink to="/avantage" variant="outline" full className="mt-4">
             Voir mon avantage
           </ButtonLink>
+          <p className="mt-2 text-center text-xs text-brown-soft">Exemple de mécanique · montant fictif.</p>
         </>
       ) : (
         <>
