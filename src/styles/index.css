@@ -61,6 +61,16 @@
   }
 }
 
+/* Visite guidée : élément à cliquer mis en évidence */
+.tour-highlight {
+  outline: 3px solid var(--color-lime);
+  outline-offset: 4px;
+  animation: tour-pulse 1.2s ease-in-out 3;
+}
+@keyframes tour-pulse {
+  50% { outline-color: var(--color-forest); outline-offset: 7px; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
 }

@@ -70,18 +70,17 @@ Polices libres proches de l'identité LNA : Jost (≈ Futura), Lobster Two (≈ 
 | Satisfaction | `#/avis/avantage`, `#/avis/visite` |
 | Profil | `#/profil` |
 
-## Mode démo
+## Mode démo : visite guidée
 
-Bouton discret **« Mode démo »** en bas à gauche (« Démo » sur mobile), disponible partout. Il permet de :
-remettre le compte à 3 achats · valider un achat · simuler la traçabilité · passer à 5 achats (ouvre la récompense) ·
-afficher la ferme · afficher la visite · simuler une expérience terminée (écran de satisfaction) · revenir à la landing page.
+Bouton **« Visite guidée »** en bas à gauche, disponible sur toutes les pages. Il ouvre une carte qui déroule le prototype
+en **14 étapes**, chacune avec une explication courte, son statut (Information LNA / Notre proposition / Donnée fictive)
+et, si besoin, l'action à faire à l'écran (le bouton concerné est mis en évidence).
 
-Parcours de soutenance (≈ 2-3 min) :
-1. Landing (promesse + schéma traçabilité → espace) → « Créer mon espace » → valider (champs pré-remplis).
-2. Tableau de bord à 3 achats → « Valider un achat » → « Scanner mon ticket » → « Simuler la validation » → 4 achats.
-3. « Retrouver mon agriculteur » → « Retrouver mon agriculteur » (codes pré-remplis) → résultat de traçabilité → « Suivre cette ferme ».
-4. « Voir ma ferme » : la ferme apparaît dans l'espace (traçabilité d'un côté, « Garder le lien » de l'autre).
-5. Mode démo → « Passer directement à 5 achats » → modale → « Découvrir ma ferme » → visite → « Participer au tirage au sort ».
-6. Mode démo → « Simuler une expérience terminée » → écran de satisfaction.
+- **Suivant / Précédent** : chaque étape prépare elle-même l'écran et l'état du compte (achats, ferme suivie, visite…).
+- **Toutes les étapes** : sauter directement à n'importe quelle étape.
+- **Recommencer à zéro** : retour à la landing page, compte remis à l'état initial.
+- **Réduire** (flèche) ou **fermer** (croix) la carte à tout moment.
 
-L'état est conservé dans le `localStorage` ; « Remettre le compte à 3 achats » (ou Profil → Réinitialiser) repart de zéro.
+Étapes : promesse · avant/avec le programme · inscription · espace à 3 achats · valider un achat · traçabilité LNA ·
+suivre cette ferme · Ma ferme · une nouvelle de la ferme · déblocage à 5 achats · récompenses · avantage · visite · avis.
+Le scénario se modifie dans `src/data/tour.ts`.

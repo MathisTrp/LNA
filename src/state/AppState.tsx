@@ -34,6 +34,9 @@ const initialState: State = {
   followedFarm: false,
 }
 
+/** Champs que la visite guidée peut fixer pour une étape donnée */
+export type DemoPatch = Partial<Pick<State, 'loggedIn' | 'purchases' | 'followedFarm' | 'visitStatus' | 'showUnlock' | 'usedRewards'>>
+
 type Action =
   | { type: 'login'; user?: Partial<User> }
   | { type: 'logout' }
@@ -44,6 +47,7 @@ type Action =
   | { type: 'dismissUnlock' }
   | { type: 'setFollowedFarm'; value: boolean }
   | { type: 'resetDemo' }
+  | { type: 'demoPatch'; patch: DemoPatch }
 
 function reducer(state: State, action: Action): State {
   switch (action.type) {
@@ -80,6 +84,9 @@ function reducer(state: State, action: Action): State {
       return { ...state, followedFarm: action.value }
     case 'resetDemo':
       return { ...initialState, loggedIn: true, user: state.user }
+    case 'demoPatch':
+      // Visite guidée : place le compte dans l'état attendu par une étape (à partir de l'état initial de démo)
+      return { ...initialState, user: state.user, ...action.patch }
   }
 }
 
@@ -104,6 +111,7 @@ type AppStateValue = State & {
   dismissUnlock: () => void
   setFollowedFarm: (value: boolean) => void
   resetDemo: () => void
+  demoPatch: (patch: DemoPatch) => void
   rewardStatus: (reward: Reward) => RewardStatus
   nextMilestone: (typeof MILESTONES)[number] | undefined
   isUnlocked: boolean
@@ -149,6 +157,7 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
     dismissUnlock: () => dispatch({ type: 'dismissUnlock' }),
     setFollowedFarm: (value) => dispatch({ type: 'setFollowedFarm', value }),
     resetDemo: () => dispatch({ type: 'resetDemo' }),
+    demoPatch: (patch) => dispatch({ type: 'demoPatch', patch }),
     rewardStatus,
     nextMilestone: MILESTONES.find((m) => m.purchases > state.purchases),
     isUnlocked: state.purchases >= UNLOCK_THRESHOLD,

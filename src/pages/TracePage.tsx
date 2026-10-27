@@ -1,5 +1,5 @@
 import { useEffect, useState, type FormEvent } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { ArrowDown, BadgeCheck, Check, MapPin, ScanBarcode, Sprout } from 'lucide-react'
 import { useAppState } from '../state/AppState'
 import { DEMO_TRACE, FARM } from '../data/demo'
@@ -18,7 +18,14 @@ const inputClass =
  * prolongé par notre proposition : « Suivre cette ferme » dans l'espace fidélité.
  */
 export function TracePage() {
-  const [step, setStep] = useState<Step>('form')
+  // La visite guidée peut ouvrir directement le résultat (state.traceStep = 'result')
+  const location = useLocation()
+  const [step, setStep] = useState<Step>((location.state as { traceStep?: Step } | null)?.traceStep ?? 'form')
+
+  // Nouvelle navigation vers cette page (ex. saut d'étape dans la visite guidée) : on repart de l'étape demandée
+  useEffect(() => {
+    setStep((location.state as { traceStep?: Step } | null)?.traceStep ?? 'form')
+  }, [location.key, location.state])
   const { followedFarm, setFollowedFarm, purchases, nextMilestone } = useAppState()
   const navigate = useNavigate()
 
