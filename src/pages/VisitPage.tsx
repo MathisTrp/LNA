@@ -1,6 +1,7 @@
 import { CalendarDays, Check, Clock, Lock, MapPin, Users } from 'lucide-react'
 import { useAppState } from '../state/AppState'
-import { FARM, VISIT } from '../data/demo'
+import { VISIT } from '../data/demo'
+import { PHOTOS } from '../data/images'
 import { BackButton, Badge, Button, ButtonLink, ContentTag, ImageSlot, SectionTitle } from '../components/ui'
 
 export function VisitPage() {
@@ -16,8 +17,12 @@ export function VisitPage() {
       </div>
 
       <div className="mt-2 overflow-hidden rounded-[32px] bg-white ring-1 ring-brown/8">
-        <ImageSlot scene="barn" alt={`La ${FARM.name}`} className="aspect-[16/8]" />
+        <ImageSlot photo={PHOTOS.amelieFamily} priority showCredit className="aspect-[16/9] sm:aspect-[16/8]" imgClassName="object-[50%_60%]" />
         <div className="p-5 sm:p-7">
+          <p className="mb-4 rounded-2xl bg-cream px-4 py-2.5 text-sm text-brown-soft">
+            Photo d’illustration : Amélie, agricultrice LNA, avec sa famille dans son élevage. La visite décrite ci-dessous est une proposition de
+            notre programme, à la Ferme de la Vallée (fictive).
+          </p>
           <div className="flex flex-wrap gap-2">
             <Badge tone="brown">
               <Users className="size-3" /> Places limitées : {VISIT.seats} familles

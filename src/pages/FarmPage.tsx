@@ -21,6 +21,7 @@ import {
 import { useAppState } from '../state/AppState'
 import { FARM, FLOCK_FOLLOW, NEWS, VISIT } from '../data/demo'
 import { EGGS_PLEIN_AIR, type Commitment } from '../data/lna'
+import { PHOTOS } from '../data/images'
 import { URLS } from '../data/sources'
 import { Badge, ButtonLink, CardHeading, ContentTag, ImageSlot, Modal, ProgressBar, SourceLink } from '../components/ui'
 
@@ -53,7 +54,7 @@ export function FarmPage() {
 function NoFarmYet() {
   return (
     <div className="mx-auto max-w-lg pt-4 text-center animate-fade-up">
-      <ImageSlot scene="landscape" alt="" className="aspect-[16/9] rounded-[28px]" />
+      <ImageSlot photo={PHOTOS.outdoorFlock} alt="" className="aspect-[16/9] rounded-[28px]" />
       <h1 className="script-title mt-6 text-[2.2rem] text-forest">Ma ferme</h1>
       <p className="mt-2 text-lg">Vous ne suivez encore aucune ferme.</p>
       <p className="mt-1 text-brown-soft">
@@ -70,7 +71,7 @@ function FarmHeader() {
   return (
     <section className="overflow-hidden rounded-[32px] bg-white ring-1 ring-brown/8">
       <div className="grid md:grid-cols-[1.1fr_1fr]">
-        <ImageSlot scene="landscape" alt={`Illustration de la ${FARM.name}`} className="aspect-[16/9] md:aspect-auto md:min-h-72" />
+        <ImageSlot photo={PHOTOS.hensMeadow} priority showCredit className="aspect-[16/9] md:aspect-auto md:min-h-72" />
         <div className="p-5 sm:p-7">
           <p className="kicker">Ma ferme</p>
           <h1 className="script-title mt-1 text-[2.3rem] text-forest sm:text-[2.7rem]">{FARM.name}</h1>
@@ -229,7 +230,7 @@ function NewsList() {
           return (
             <li key={n.id}>
               <Link to={`/ferme/actualites/${n.id}`} className="group flex items-center gap-4 py-3.5">
-                <ImageSlot scene={n.scene} src={n.image} alt="" className="size-16 shrink-0 rounded-2xl sm:size-20" />
+                <ImageSlot scene={n.scene} photo={n.photo} alt="" className="size-16 shrink-0 rounded-2xl sm:size-20" />
                 <div className="min-w-0 flex-1">
                   <p className="text-sm text-brown-soft">{n.date}</p>
                   <p className="font-bold leading-snug group-hover:text-forest">{n.title}</p>
@@ -327,7 +328,7 @@ function MemberVideoCard() {
         className="relative mt-3 block w-full overflow-hidden rounded-3xl text-left disabled:cursor-not-allowed"
         aria-label={isUnlocked ? 'Lire la vidéo' : 'Vidéo verrouillée'}
       >
-        <ImageSlot scene="hens" alt="" className={`aspect-video ${isUnlocked ? '' : 'opacity-60'}`} />
+        <ImageSlot photo={PHOTOS.henGrass} alt="" className={`aspect-video ${isUnlocked ? '' : 'opacity-60'}`} />
         <span className="absolute inset-0 grid place-items-center">
           <span className={`grid size-14 place-items-center rounded-full shadow-lg ${isUnlocked ? 'bg-lime text-deep' : 'bg-white text-brown-soft'}`}>
             {isUnlocked ? <Play className="ml-1 size-6" fill="currentColor" /> : <Lock className="size-5" />}
@@ -344,7 +345,7 @@ function MemberVideoCard() {
           Une matinée à la ferme
         </h2>
         <div className="relative mt-4 overflow-hidden rounded-3xl">
-          <ImageSlot scene="hens" alt="" className="aspect-video" />
+          <ImageSlot photo={PHOTOS.henGrass} alt="" className="aspect-video" />
           <span className="absolute inset-0 grid place-items-center bg-brown/30 text-center text-sm font-semibold text-white">
             Emplacement de la vidéo
             <br />
@@ -369,7 +370,8 @@ function FlockFollow() {
         </div>
         <ContentTag kind="proposal" />
       </div>
-      <div className="mt-3 grid gap-5 md:grid-cols-2">
+      <ImageSlot photo={PHOTOS.outdoorFlock} showCredit className="mt-4 aspect-[16/9] rounded-[20px] md:aspect-[21/8]" />
+      <div className="mt-4 grid gap-5 md:grid-cols-2">
         <div>
           <p className="text-brown-soft">Vous suivez :</p>
           <p className="text-[1.3rem] font-bold leading-tight">{FLOCK_FOLLOW.group}</p>

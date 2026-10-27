@@ -32,7 +32,7 @@ export function SignupPage() {
     <div className="min-h-dvh pb-24">
       <header className="bg-white">
         <div className="mx-auto flex h-20 max-w-lg items-center justify-between px-4">
-          <div className="pt-3">
+          <div>
             <Logo compact />
           </div>
           <BackButton />

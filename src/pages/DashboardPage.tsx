@@ -4,6 +4,7 @@ import { BadgeCheck, CalendarDays, ChevronRight, Lock, MapPin, Newspaper, Plus, 
 import { useAppState } from '../state/AppState'
 import { FARM, NEWS, REWARDS, VISIT } from '../data/demo'
 import { CATEGORIES, EGGS_PLEIN_AIR } from '../data/lna'
+import { PHOTOS } from '../data/images'
 import { Badge, Button, ButtonLink, CardHeading, ContentTag, ImageSlot, Modal, ProgressBar, SourceLink } from '../components/ui'
 
 type Category = (typeof CATEGORIES)[number]
@@ -135,7 +136,7 @@ function FarmCard() {
 
   return (
     <section className="card overflow-hidden p-0 sm:p-0" aria-labelledby="farm-title">
-      <ImageSlot scene="farmer" alt={`Illustration : ${FARM.farmer} dans sa ferme`} className="aspect-[16/8]" />
+      <ImageSlot photo={PHOTOS.hensMeadow} showCredit className="aspect-[16/8]" />
       <div className="p-5 sm:p-6">
         <div className="flex flex-wrap items-center justify-between gap-2">
           <CardHeading icon={<Tractor className="size-4" />}>Ma ferme</CardHeading>
@@ -171,7 +172,7 @@ function LatestNewsCard() {
         <ContentTag kind="demo" label="Fictive" />
       </div>
       <div className="mt-3 flex gap-4">
-        <ImageSlot scene={news.scene} src={news.image} alt="" className="size-24 shrink-0 rounded-2xl sm:size-28" />
+        <ImageSlot scene={news.scene} photo={news.photo} alt="" className="size-24 shrink-0 rounded-2xl sm:size-28" />
         <div className="min-w-0">
           <p className="text-sm text-brown-soft">{news.date}</p>
           <h2 id="news-title" className="mt-0.5 font-bold leading-snug">{news.title}</h2>
@@ -256,7 +257,13 @@ function DiscoverCategories() {
               className="group overflow-hidden rounded-3xl bg-white text-left ring-1 ring-brown/8 transition hover:-translate-y-0.5 hover:ring-forest/40"
               aria-label={known ? `${cat.label} : voir ma ferme` : `Découvrir la filière : ${cat.label}`}
             >
-              <ImageSlot scene={cat.scene} alt="" className="aspect-[4/3] md:aspect-[16/7]" />
+              <ImageSlot
+                scene={cat.scene}
+                photo={cat.photo}
+                alt=""
+                className={`aspect-[4/3] md:aspect-[16/7] ${cat.contain ? 'bg-white' : ''}`}
+                imgClassName={cat.contain ? 'object-contain p-2' : 'object-[50%_30%]'}
+              />
               <div className="p-3">
                 <p className="font-bold">{cat.label}</p>
                 <p className="text-xs text-brown-soft sm:text-sm">{known ? 'Votre ferme' : 'Découvrir la filière'}</p>
@@ -269,7 +276,7 @@ function DiscoverCategories() {
       <Modal open={!!selected} onClose={() => setSelected(null)} labelledBy="cat-title">
         {selected && (
           <>
-            <ImageSlot scene={selected.scene} alt="" className="-mx-6 -mt-6 mb-5 aspect-[16/9] rounded-t-[32px]" />
+            <ImageSlot scene={selected.scene} photo={selected.photo} showCredit className="-mx-6 -mt-6 mb-5 aspect-[16/9] rounded-t-[32px]" imgClassName="object-[50%_30%]" />
             <ContentTag kind="lna" />
             <h2 id="cat-title" className="mt-2 text-2xl font-bold">
               {selected.label} La Nouvelle Agriculture®

@@ -4,6 +4,7 @@
  * Attention au périmètre : les engagements « œufs » ci-dessous concernent les œufs Plein Air uniquement.
  */
 import { URLS } from './sources'
+import { PHOTOS, type Photo } from './images'
 
 /** Fonctionnement de l'outil de traçabilité existant (sources : trace-steps, trace-inputs) */
 export const TRACEABILITY = {
@@ -91,12 +92,17 @@ export const CATEGORIES: {
   facts: { text: string; scope: string; source: string }[]
   farmer?: { name: string; caption: string; source: string }
   scene: 'hens' | 'landscape' | 'pasture'
+  photo: Photo
+  /** Photo de produit : affichée entière, sans recadrage */
+  contain?: boolean
 }[] = [
   {
     id: 'oeufs',
     label: 'Œufs',
     facts: [],
     scene: 'hens',
+    photo: PHOTOS.eggBox,
+    contain: true,
   },
   {
     id: 'volaille',
@@ -107,6 +113,7 @@ export const CATEGORIES: {
     ],
     farmer: { name: 'Angélique', caption: 'éleveuse de poulets Label Rouge à Chemillé (49)', source: URLS.agriculteurs },
     scene: 'landscape',
+    photo: PHOTOS.angelique,
   },
   {
     id: 'boucherie',
@@ -117,5 +124,6 @@ export const CATEGORIES: {
     ],
     farmer: { name: 'Valérie', caption: 'éleveuse de vaches à Sainte-Pazanne (44)', source: URLS.agriculteurs },
     scene: 'pasture',
+    photo: PHOTOS.cows,
   },
 ]

@@ -4,9 +4,10 @@
  * Tout ce fichier est inventé : Claire, la Ferme de la Vallée, Sophie Martin, ses actualités,
  * les seuils, montants, dates et codes. Aucun élément ici ne doit être présenté comme un fait LNA.
  * Les informations LNA réelles sont dans lna.ts (avec sources dans sources.ts).
- * Les champs `image` sont optionnels : sans photo autorisée, une illustration locale est affichée.
+ * Les photos d'illustration sont des photos LNA sans personne identifiable (voir images.ts).
  */
 import type { SceneName } from '../components/Illustration'
+import { PHOTOS, type Photo } from './images'
 
 export type User = {
   firstName: string
@@ -58,7 +59,8 @@ export type NewsItem = {
   excerpt: string
   body: string[]
   scene: SceneName
-  image?: string
+  /** Photo LNA d'illustration (aucune personne identifiable) */
+  photo?: Photo
   /** Contenu réservé aux membres ayant atteint 5 achats */
   membersOnly?: boolean
   video?: boolean
@@ -76,6 +78,7 @@ export const NEWS: NewsItem[] = [
       'On en profite pour vérifier les clôtures avant l’hiver.',
     ],
     scene: 'hens',
+    photo: PHOTOS.hensMeadow,
   },
   {
     id: 'sortie-plein-air',
@@ -87,6 +90,7 @@ export const NEWS: NewsItem[] = [
       'Les premiers jours, elles restent près du bâtiment ; il leur faut un peu de temps pour s’aventurer vers les arbres.',
     ],
     scene: 'landscape',
+    photo: PHOTOS.outdoorFlock,
     membersOnly: true,
     video: true,
   },
@@ -100,6 +104,7 @@ export const NEWS: NewsItem[] = [
       'Les premiers jours servent surtout à les laisser s’installer au calme. On observe beaucoup.',
     ],
     scene: 'barn',
+    photo: PHOTOS.henHeld,
   },
   {
     id: 'entretien-parcours',
@@ -111,6 +116,7 @@ export const NEWS: NewsItem[] = [
       'Nous avons aussi planté quelques arbres de plus. Dans quelques années, ils donneront de l’ombre.',
     ],
     scene: 'trees',
+    photo: PHOTOS.henGrass,
   },
 ]
 

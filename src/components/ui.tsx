@@ -3,6 +3,7 @@ import { createPortal } from 'react-dom'
 import { Link, useNavigate, type LinkProps } from 'react-router-dom'
 import { ArrowLeft, Apple, BadgeCheck, Carrot, Egg, ExternalLink, Info, Leaf, Lightbulb, Sprout, Tractor, Wheat, X } from 'lucide-react'
 import { Illustration, type SceneName } from './Illustration'
+import { LOGO_LNA, type Photo } from '../data/images'
 
 /* ---------- Boutons ---------- */
 
@@ -122,22 +123,49 @@ export function Badge({ tone = 'mint', children }: { tone?: 'mint' | 'lime' | 'c
 
 export function ImageSlot({
   src,
-  scene,
+  photo,
+  scene = 'landscape',
   alt,
   className = '',
+  imgClassName = '',
+  priority = false,
+  showCredit = false,
 }: {
   src?: string
-  scene: SceneName
-  alt: string
+  /** Photo officielle LNA (prioritaire sur src) */
+  photo?: Photo
+  /** Illustration de repli si l'image ne charge pas */
+  scene?: SceneName
+  alt?: string
   className?: string
+  /** Ex. cadrage : object-[50%_30%] */
+  imgClassName?: string
+  /** true pour l'image principale visible au chargement (pas de lazy loading) */
+  priority?: boolean
+  /** Affiche la légende / le crédit de la photo */
+  showCredit?: boolean
 }) {
   const [failed, setFailed] = useState(false)
+  const url = photo?.src ?? src
+  const label = alt ?? photo?.alt ?? ''
   return (
     <div className={`relative overflow-hidden bg-mint ${className}`}>
-      {src && !failed ? (
-        <img src={src} alt={alt} loading="lazy" onError={() => setFailed(true)} className="h-full w-full object-cover" />
+      {url && !failed ? (
+        <img
+          src={url}
+          alt={label}
+          loading={priority ? 'eager' : 'lazy'}
+          decoding="async"
+          onError={() => setFailed(true)}
+          className={`h-full w-full ${imgClassName.includes('object-contain') ? '' : 'object-cover'} ${imgClassName}`}
+        />
       ) : (
-        <Illustration name={scene} label={alt} />
+        <Illustration name={scene} label={label} />
+      )}
+      {showCredit && photo && !failed && (
+        <span className="absolute bottom-0 right-0 max-w-full rounded-tl-xl bg-brown/70 px-2.5 py-1 text-[11px] leading-tight text-white backdrop-blur-sm">
+          {photo.credit}
+        </span>
       )}
     </div>
   )
@@ -150,13 +178,11 @@ export function ImageSlot({
 
 export function Logo({ compact = false }: { compact?: boolean }) {
   return (
-    <Link to="/" aria-label="Entrez dans nos fermes — accueil" className="inline-flex items-center gap-2.5">
-      <span className={`grid shrink-0 place-items-center rounded-2xl bg-forest text-lime ${compact ? 'size-9' : 'size-11'}`}>
-        <Sprout className={compact ? 'size-5' : 'size-6'} />
-      </span>
-      <span className="leading-tight">
-        <span className={`block font-bold text-brown ${compact ? 'text-[15px]' : 'text-[17px]'}`}>Entrez dans nos fermes</span>
-        <span className="block text-[11px] font-semibold uppercase tracking-wider text-brown-soft">Espace fidélité · prototype</span>
+    <Link to="/" aria-label="Entrez dans nos fermes — accueil du prototype" className="inline-flex items-center gap-3">
+      <img src={LOGO_LNA} alt="La Nouvelle Agriculture®" className={`w-auto shrink-0 ${compact ? 'h-10' : 'h-12 sm:h-14'}`} />
+      <span className="border-l border-brown/15 pl-3 leading-tight">
+        <span className={`block font-bold text-brown ${compact ? 'text-[14px]' : 'text-[16px]'}`}>Entrez dans nos fermes</span>
+        <span className="block text-[11px] font-semibold text-brown-soft">Prototype étudiant – non officiel</span>
       </span>
     </Link>
   )

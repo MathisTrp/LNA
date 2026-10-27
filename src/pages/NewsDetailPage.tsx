@@ -20,7 +20,7 @@ export function NewsDetailPage() {
       <BackButton to="/ferme" label="Ma ferme" />
 
       <div className="relative mt-2 overflow-hidden rounded-[28px]">
-        <ImageSlot scene={news.scene} src={news.image} alt={news.title} className="aspect-[16/9]" />
+        <ImageSlot scene={news.scene} photo={news.photo} priority showCredit className="aspect-[16/9]" />
         {news.video && (
           <span className="absolute inset-0 grid place-items-center">
             <span className="grid size-16 place-items-center rounded-full bg-lime text-deep shadow-lg">
@@ -56,7 +56,9 @@ export function NewsDetailPage() {
       ) : (
         <>
           <div className="mt-6 flex items-center gap-3">
-            <ImageSlot scene="farmer" alt="" className="size-12 shrink-0 rounded-full" />
+            <span className="grid size-12 shrink-0 place-items-center rounded-full bg-forest text-lg font-bold text-white" aria-hidden>
+              {FARM.farmerFirstName[0]}
+            </span>
             <p className="font-hand text-xl text-forest">
               {FARM.farmerFirstName} <span className="font-sans text-sm text-brown-soft">(profil fictif)</span>
             </p>
@@ -93,7 +95,7 @@ export function NewsDetailPage() {
         {others.map((n) => (
           <li key={n.id}>
             <Link to={`/ferme/actualites/${n.id}`} className="card flex items-center gap-3 p-3 hover:ring-forest/40 sm:p-3">
-              <ImageSlot scene={n.scene} alt="" className="size-16 shrink-0 rounded-2xl" />
+              <ImageSlot scene={n.scene} photo={n.photo} alt="" className="size-16 shrink-0 rounded-2xl" />
               <span className="min-w-0 flex-1">
                 <span className="block text-sm text-brown-soft">{n.date}</span>
                 <span className="block font-semibold leading-snug">{n.title}</span>

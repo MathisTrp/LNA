@@ -5,6 +5,7 @@ import { useAppState } from '../state/AppState'
 import { DEMO_TRACE, FARM } from '../data/demo'
 import { EGGS_PLEIN_AIR, TRACEABILITY } from '../data/lna'
 import { URLS } from '../data/sources'
+import { PHOTOS } from '../data/images'
 import { BackButton, Button, ButtonLink, ContentTag, ImageSlot, SectionTitle, SourceLink } from '../components/ui'
 
 type Step = 'form' | 'searching' | 'result' | 'followed'
@@ -143,7 +144,16 @@ function TraceForm({ onSubmit }: { onSubmit: () => void }) {
         <ContentTag kind="lna" label="Traçabilité LNA · service existant" />
         <ContentTag kind="demo" label="Simulation" />
       </div>
-      <SectionTitle as="h1" kicker="Retrouvez l’agriculteur" title="derrière votre produit" className="mt-3" />
+      <div className="mt-3 grid items-center gap-4 sm:grid-cols-[1fr_auto]">
+        <SectionTitle as="h1" kicker="Retrouvez l’agriculteur" title="derrière votre produit" />
+        <figure className="hidden sm:block">
+          <ImageSlot photo={PHOTOS.amelieEggs} priority className="h-44 w-32 rounded-2xl" />
+          <figcaption className="mt-1 w-32 text-[11px] leading-tight text-brown-soft">Amélie, éleveuse LNA, et son fils · Photo LNA</figcaption>
+        </figure>
+      </div>
+      <figure className="mt-4 sm:hidden">
+        <ImageSlot photo={PHOTOS.amelieEggs} priority showCredit className="aspect-[4/3] rounded-[20px]" imgClassName="object-[50%_58%]" />
+      </figure>
 
       <ol className="mt-4 grid gap-2 sm:grid-cols-3">
         {TRACEABILITY.steps.map((s, i) => (
@@ -217,13 +227,20 @@ export function TraceResult({ compact = false }: { compact?: boolean }) {
       <div className="flex flex-wrap items-center gap-2">
         <ContentTag kind="lna" label="Résultat de la traçabilité" />
       </div>
-      <p className="mt-3 text-sm text-brown-soft">Votre produit</p>
-      <h2 id="trace-title" className="text-[1.4rem] font-bold leading-tight">
-        {EGGS_PLEIN_AIR.productName}
-      </h2>
+      <div className="mt-3 flex items-center gap-4">
+        <ImageSlot photo={PHOTOS.eggBox} className="aspect-[3/2] w-28 shrink-0 rounded-2xl bg-white ring-1 ring-brown/10 sm:w-36" imgClassName="object-contain p-1.5" />
+        <div>
+          <p className="text-sm text-brown-soft">Votre produit</p>
+          <h2 id="trace-title" className="text-[1.3rem] font-bold leading-tight sm:text-[1.4rem]">
+            {EGGS_PLEIN_AIR.productName}
+          </h2>
+        </div>
+      </div>
 
       <div className="mt-4 flex items-center gap-4 rounded-3xl bg-cream p-4">
-        <ImageSlot scene="farmer" alt="" className="size-16 shrink-0 rounded-full" />
+        <span className="grid size-16 shrink-0 place-items-center rounded-full bg-forest text-2xl font-bold text-white" aria-hidden>
+          {FARM.farmerFirstName[0]}
+        </span>
         <div className="min-w-0">
           <p className="text-lg font-bold leading-tight">{FARM.farmer}</p>
           <p className="text-[15px]">

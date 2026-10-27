@@ -16,6 +16,10 @@ Le programme ne la remplace pas : il la prolonge dans le temps
 | B. Fonctionnalités proposées par notre recommandation | pages (suivre une ferme, nouvelles, paliers, récompenses, visites, parrainage, « dire merci ») | étiquette « Notre proposition » |
 | C. Données de démonstration (fictives) | `src/data/demo.ts` (`DEMO_DATA`) | étiquette « Donnée fictive / Profil fictif » |
 
+Les photos et le logo proviennent du site officiel LNA (usage autorisé pour ce prototype étudiant), stockés localement :
+voir `public/images/lna/SOURCES.md`. Une vraie personne n'apparaît qu'avec sa vraie identité (Amélie, Angélique) ;
+les zones fictives n'utilisent que des photos de poules, d'élevage ou de prairie.
+
 La Ferme de la Vallée et Sophie Martin sont **fictives** : aucun vrai agriculteur ne s'exprime dans le prototype.
 Ses engagements affichés sont ceux publiés par LNA pour les **œufs Plein Air** uniquement.
 
@@ -41,7 +45,8 @@ src/
   components/         UI réutilisable, layout + navigation, mode démo, illustrations SVG
   pages/              un fichier par écran
   styles/index.css    thème Tailwind (couleurs et polices inspirées du site LNA)
-  assets/photos/      emplacement pour de vraies photos (renseigner `image` dans demo.ts, uniquement avec des photos autorisées)
+  data/images.ts      registre des photos officielles LNA (chemins, alt, légendes)
+public/images/lna/    photos et logo officiels LNA téléchargés localement + SOURCES.md
 ```
 
 Stack : React 19 · TypeScript · Vite · Tailwind CSS 4 · React Router (HashRouter) · Lucide.

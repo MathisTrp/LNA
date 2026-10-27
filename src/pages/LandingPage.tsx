@@ -1,7 +1,8 @@
 import { useNavigate } from 'react-router-dom'
 import { ArrowRight, QrCode, ScanBarcode, ShoppingBasket, Sprout, Tag, Tractor } from 'lucide-react'
 import { useAppState } from '../state/AppState'
-import { DEMO_USER, FARM } from '../data/demo'
+import { DEMO_USER } from '../data/demo'
+import { PHOTOS } from '../data/images'
 import { ButtonLink, ContentTag, ImageSlot, Logo, PatternBand, PrototypeNotice } from '../components/ui'
 
 export function LandingPage() {
@@ -12,7 +13,7 @@ export function LandingPage() {
     <div className="min-h-dvh pb-20">
       <header className="bg-white">
         <div className="mx-auto flex h-20 max-w-6xl items-center justify-between px-4 md:px-6">
-          <div className="pt-3">
+          <div>
             <Logo />
           </div>
           {loggedIn && (
@@ -38,12 +39,13 @@ export function LandingPage() {
           <p className="mt-3 font-hand text-xl text-olive">Derrière chaque produit, une ferme à découvrir.</p>
         </div>
 
-        <div className="relative">
-          <ImageSlot scene="farmer" alt={`${FARM.farmer}, agricultrice`} className="aspect-[4/3] rounded-[32px] md:aspect-[5/4]" />
-          <p className="absolute bottom-3 left-3 right-3 rounded-2xl bg-white/90 px-4 py-2 text-sm font-semibold backdrop-blur sm:left-auto sm:right-4">
-            Illustration · {FARM.farmer}, éleveuse fictive
-          </p>
-        </div>
+        <figure className="relative">
+          <ImageSlot photo={PHOTOS.amelieHero} priority className="aspect-[3/2] rounded-[32px] shadow-[0_12px_40px_-16px_rgba(47,32,35,0.45)]" imgClassName="object-[50%_35%]" />
+          <figcaption className="absolute bottom-3 left-3 right-3 rounded-2xl bg-white/92 px-4 py-2 text-sm backdrop-blur sm:left-auto sm:right-4 sm:max-w-sm">
+            <span className="font-semibold">Amélie</span>, éleveuse de poules plein air à Moncoutant (79)
+            <span className="block text-xs text-brown-soft">Agricultrice LNA · photo La Nouvelle Agriculture</span>
+          </figcaption>
+        </figure>
       </section>
 
       <section className="mx-auto mt-8 grid max-w-6xl gap-4 px-4 sm:grid-cols-2 md:px-6">

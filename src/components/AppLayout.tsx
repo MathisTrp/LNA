@@ -24,10 +24,9 @@ export function AppLayout() {
           <div>
             <Logo compact />
           </div>
-          <p className="text-[15px] text-brown-soft md:hidden">
+          <p className="hidden text-[15px] text-brown-soft sm:block">
             Bonjour <span className="font-semibold text-brown">{user.firstName}</span>
           </p>
-          <p className="kicker hidden text-brown-soft md:block">Prototype étudiant – non officiel</p>
         </div>
         {/* Barre de navigation desktop, dans l'esprit du bandeau vert du site LNA */}
         <nav className="hidden bg-forest md:block" aria-label="Navigation principale">
